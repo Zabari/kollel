@@ -15,15 +15,16 @@ export default class Login extends Component {
         this.state = {};
         this.success = this.success.bind(this);
     }
-    success(response){
-        fetch('http://localhost:5000/', {
+    success(googleResponse){
+        fetch('http://localhost:5000/login', {
             method: 'POST',
             headers: {
                 'Accept': 'application/json',
                 'Content-Type': 'application/json',
                 // 'Access-Control-Allow-Origin': 'http://localhost:5000/'
             },
-            body: JSON.stringify(response)
+            credentials: "include",
+            body: JSON.stringify(googleResponse)
         }).then((response) => {
             return response.json();
         }).then((response) => {

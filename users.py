@@ -1,5 +1,6 @@
 import sqlite3
 
+
 def create_table(cursor):
     cursor.execute(
         '''
@@ -14,18 +15,34 @@ def create_table(cursor):
         '''
     )
 
+
+def get_user_list():
+    connection = sqlite3.connect('users.db')
+    connection.row_factory = sqlite3.Row
+    with connection:
+        create_table(connection)
+        all_users = connection.execute(
+            '''
+            SELECT id, email, first_name, last_name FROM users
+            ''').fetchall()
+        if (all_users):
+            return [dict(user) for user in all_users]
+        return False
+
+
 def exists(user_object):
     connection = sqlite3.connect('users.db')
+    connection.row_factory = sqlite3.Row
     with connection:
         create_table(connection)
         exists = connection.execute(
             '''
-            SELECT id FROM users WHERE googleid=:sub
-            '''
-        , user_object).fetchone()
+            SELECT id, admin FROM users WHERE googleid=:sub
+            ''', user_object).fetchone()
         if (exists):
-            return exists[0]
+            return dict(exists)
         return False
+
 
 def add_user(user_object):
     connection = sqlite3.connect('users.db')
@@ -42,10 +59,8 @@ def add_user(user_object):
                 :sub, :given_name,
                 :family_name, :email
             )
-            '''
-        , user_object)
+            ''', user_object)
         return connection.execute(
             '''
             SELECT id FROM users WHERE googleid=:sub
-            '''
-        , user_object).fetchone()[0]
+            ''', user_object).fetchone()[0]
