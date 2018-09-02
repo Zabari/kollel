@@ -12,6 +12,8 @@ import BasicExample from './BasicExample';
 import FormControl from '@material-ui/core/FormControl';
 import LoginForm from './LoginForm';
 import App from './App';
+import Login from './Login';
+
 
 
 
@@ -35,16 +37,10 @@ const Home = () => (
         alignItems="center"
         style={{ minHeight: '100vh' }}
     >
-        <Link to="login" style={{ textDecoration: 'none' }}>
-        <Button
-            variant="outlined"
-            color="primary"
-            className="Welcomebutton"
-        >
-            Login
-        </Button>
 
-        </Link>
+        <Login callback={this.authenticateUser}/>
+
+
         <Link to="929" style={{ textDecoration: 'none' }}>
         <Button variant="contained" className="Welcomebutton"  >
             929 Tanach
@@ -58,7 +54,7 @@ const Home = () => (
     </Grid>
     </div>
 );
-const Login = () => (
+const LoginPage = () => (
     <div>
     <Grid
         container
@@ -93,7 +89,7 @@ class Page extends Component {
                 <Router>
                 <div>
                     <Route exact path="/" component={Home}/>
-                    <Route path="/login" component={Login}/>
+                    <Route path="/login" component={LoginPage}/>
                     <Route path="/about" component={About}/>
                     <Route path="/929" component={Tanach}/>
                 </div>

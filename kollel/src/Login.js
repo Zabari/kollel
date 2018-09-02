@@ -3,6 +3,7 @@ import './App.css';
 import Page from './Page';
 import LoginForm from './LoginForm';
 import GoogleLogin from 'react-google-login';
+import Button from '@material-ui/core/Button';
 
 const responseGoogle = (response) => {
     console.log(response);
@@ -16,12 +17,12 @@ export default class Login extends Component {
         this.success = this.success.bind(this);
     }
     success(googleResponse){
-        fetch('http://localhost:5000/login', {
+        fetch(process.env.HOST + '/login', {
             method: 'POST',
             headers: {
                 'Accept': 'application/json',
                 'Content-Type': 'application/json',
-                // 'Access-Control-Allow-Origin': 'http://localhost:5000/'
+                // 'Access-Control-Allow-Origin': process.env.HOST + '/'
             },
             credentials: "include",
             body: JSON.stringify(googleResponse)
@@ -34,12 +35,19 @@ export default class Login extends Component {
     }
     render(){
         return (
+            <Button
+                variant="outlined"
+                color="primary"
+                className="Welcomebutton"
+            >
             <GoogleLogin
-            clientId={process.env.REACT_APP_GOOGLE_KEY}
-            buttonText="Login"
-            onSuccess={this.success}
-            onFailure={responseGoogle}
+                className="Welcomebutton"
+                clientId={process.env.REACT_APP_GOOGLE_KEY}
+                buttonText="Login"
+                onSuccess={this.success}
+                onFailure={responseGoogle}
             />
+            </Button>
         );
     }
 }

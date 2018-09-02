@@ -29,7 +29,7 @@ export default class HourLog extends Component{
     }
 
     fetchLog(id){
-        fetch('http://localhost:5000/getlog', {
+        fetch(process.env.HOST + '/getlog', {
             method: 'POST',
             headers: {
                 'Accept': 'application/json',

@@ -20,20 +20,31 @@ export default class UserPicker extends Component{
         };
         this.componentDidMount = this.componentDidMount.bind(this);
         this.handleChange = this.handleChange.bind(this);
+        this.renderCurrentHours = this.renderCurrentHours.bind(this);
+
     }
 
     handleChange(event){
-        console.log(JSON.parse(event.target.value));
+        // console.log(event.target.value)
         const obj = JSON.parse(event.target.value);
-        this.setState({
-            currentEmail: obj.email,
-            currentId: obj.id,
-            currentName: (obj.first_name + " " + obj.last_name),
-            user: event.target.value,
-        });
+        if (obj){
+            // console.log(JSON.parse(event.target.value));
+            this.setState({
+                currentEmail: obj.email,
+                currentId: obj.id,
+                currentName: (obj.first_name + " " + obj.last_name),
+                user: event.target.value,
+            });
+        }
+        else{
+            this.setState({
+                user: false,
+                currentEmail: "",
+            });
+        }
     }
     componentDidMount(){
-        fetch('http://localhost:5000/getuserlist', {
+        fetch(process.env.HOST + '/getuserlist', {
             method: 'POST',
             headers: {
                 'Accept': 'application/json',
@@ -52,7 +63,9 @@ export default class UserPicker extends Component{
     }
 
     renderCurrentHours(){
+        // console.log(this.state.user);
         if (this.state.user){
+            // console.log("woot");
             return (
                 <div>
                 <HourLog id={this.state.currentId}
@@ -74,6 +87,7 @@ export default class UserPicker extends Component{
                     {data.first_name} {data.last_name}
                 </option>
         ));
+        const currentHours = this.renderCurrentHours();
         return(
             <div>
 
@@ -87,7 +101,7 @@ export default class UserPicker extends Component{
             {options}
           </Select>
           {this.state.currentEmail}
-          {this.renderCurrentHours()}
+          {currentHours}
             </div>
         );
     }
