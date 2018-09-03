@@ -40,7 +40,7 @@ def login():
     return jsonify({"id": "id" in session, "admin": admin})
 
 
-@app.route('/getid', methods=['GET', 'POST'])
+@app.route('/api/getid', methods=['GET', 'POST'])
 def get_id():
     cookie_object = {
         "id": False,
