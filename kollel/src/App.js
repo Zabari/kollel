@@ -29,7 +29,7 @@ export default class App extends Component {
         this.fetchCookies();
     }
     fetchCookies(){
-        fetch(process.env.HOST + '/getid', {
+        fetch('/getid', {
             method: 'POST',
             headers: {
                 'Accept': 'application/json',
@@ -78,7 +78,7 @@ export default class App extends Component {
 
         return (
             <div>
-                <Page/>
+                <Page authenticateUser={this.authenticateUser}/>
 
             </div>
         );

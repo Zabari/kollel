@@ -44,7 +44,7 @@ export default class UserPicker extends Component{
         }
     }
     componentDidMount(){
-        fetch(process.env.HOST + '/getuserlist', {
+        fetch('/getuserlist', {
             method: 'POST',
             headers: {
                 'Accept': 'application/json',

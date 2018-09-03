@@ -18,7 +18,7 @@ export default class Hours extends Component{
         this.fetchState();
     }
     fetchState(){
-        fetch(process.env.HOST + '/getlearningstate', {
+        fetch('/getlearningstate', {
             method: 'POST',
             headers: {
                 'Accept': 'application/json',
@@ -39,7 +39,7 @@ export default class Hours extends Component{
     handleClick(e){
         e.preventDefault();
             if (!this.state.startTime){
-                fetch(process.env.HOST + '/startlearning', {
+                fetch('/startlearning', {
                     method: 'POST',
                     headers: {
                         'Accept': 'application/json',
@@ -57,7 +57,7 @@ export default class Hours extends Component{
                 });
         }
         else {
-            fetch(process.env.HOST + '/endlearning', {
+            fetch('/endlearning', {
                 method: 'POST',
                 headers: {
                     'Accept': 'application/json',

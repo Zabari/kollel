@@ -25,35 +25,42 @@ import Login from './Login';
 //     }
 // );
 
-const Home = () => (
-    <div className="Front-page">
-    <header className="Welcomebanner">
-        Welcome to Kollel!
-    </header>
-    <Grid
-        container
-        direction="row"
-        justify="space-evenly"
-        alignItems="center"
-        style={{ minHeight: '100vh' }}
-    >
+class HomePage extends Component{
+    constructor(props){
+        super(props);
+    }
+    render(){
+        return (
+            <div className="Front-page">
+            <header className="Welcomebanner">
+                Welcome to Kollel!
+            </header>
+            <Grid
+                container
+                direction="row"
+                justify="space-evenly"
+                alignItems="center"
+                style={{ minHeight: '100vh' }}
+            >
 
-        <Login callback={this.authenticateUser}/>
+                <Login callback={this.props.authenticateUser}/>
 
 
-        <Link to="929" style={{ textDecoration: 'none' }}>
-        <Button variant="contained" className="Welcomebutton"  >
-            929 Tanach
-        </Button>
-        </Link>
-        <Link to="about" style={{ textDecoration: 'none' }}>
-        <Button variant="contained" className="Welcomebutton"  >
-            About Us
-        </Button>
-        </Link>
-    </Grid>
-    </div>
-);
+                <Link to="929" style={{ textDecoration: 'none' }}>
+                <Button variant="contained" className="Welcomebutton"  >
+                    929 Tanach
+                </Button>
+                </Link>
+                <Link to="about" style={{ textDecoration: 'none' }}>
+                <Button variant="contained" className="Welcomebutton"  >
+                    About Us
+                </Button>
+                </Link>
+            </Grid>
+            </div>
+        );
+    }
+}
 const LoginPage = () => (
     <div>
     <Grid
@@ -88,7 +95,7 @@ class Page extends Component {
             <div>
                 <Router>
                 <div>
-                    <Route exact path="/" component={Home}/>
+                    <Route exact path="/" render={()=>(<HomePage authenticateUser={this.props.authenticateUser}/>)}/>
                     <Route path="/login" component={LoginPage}/>
                     <Route path="/about" component={About}/>
                     <Route path="/929" component={Tanach}/>

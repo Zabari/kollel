@@ -17,12 +17,12 @@ export default class Login extends Component {
         this.success = this.success.bind(this);
     }
     success(googleResponse){
-        fetch(process.env.HOST + '/login', {
+        fetch('/login', {
             method: 'POST',
             headers: {
                 'Accept': 'application/json',
                 'Content-Type': 'application/json',
-                // 'Access-Control-Allow-Origin': process.env.HOST + '/'
+                // 'Access-Control-Allow-Origin': '/'
             },
             credentials: "include",
             body: JSON.stringify(googleResponse)
