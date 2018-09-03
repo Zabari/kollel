@@ -29,7 +29,7 @@ export default class App extends Component {
         this.fetchCookies();
     }
     fetchCookies(){
-        fetch('/getid', {
+        fetch('/api/getid', {
             method: 'POST',
             headers: {
                 'Accept': 'application/json',
