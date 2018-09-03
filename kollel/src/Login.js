@@ -17,7 +17,7 @@ export default class Login extends Component {
         this.success = this.success.bind(this);
     }
     success(googleResponse){
-        fetch('/login', {
+        fetch('/api/login', {
             method: 'POST',
             headers: {
                 'Accept': 'application/json',

@@ -15,7 +15,7 @@ app.secret_key = secret_keys["flask_secret"]
 CORS(app, supports_credentials=True)
 
 
-@app.route('/login', methods=['GET', 'POST'])
+@app.route('/api/login', methods=['GET', 'POST'])
 def login():
     admin = False
     google_dictionary = request.get_json()
@@ -53,7 +53,7 @@ def get_id():
     # return jsonify((("id" in session) and session["id"]) or 0)
 
 
-@app.route('/getlog', methods=['GET', 'POST'])
+@app.route('/api/getlog', methods=['GET', 'POST'])
 def get_log():
     # print(request.get_json())
     request_object = request.get_json()
@@ -71,12 +71,12 @@ def get_log():
     return jsonify(False)
 
 
-@app.route('/getlearningstate', methods=['GET', 'POST'])
+@app.route('/api/getlearningstate', methods=['GET', 'POST'])
 def get_learning():
     return jsonify("start_time" in session)
 
 
-@app.route('/getuserlist', methods=['GET', 'POST'])
+@app.route('/api/getuserlist', methods=['GET', 'POST'])
 def get_user_list():
     if ("admin" in session):
         all_users = users.get_user_list()
@@ -84,7 +84,7 @@ def get_user_list():
     return jsonify(False)
 
 
-@app.route('/startlearning', methods=['GET', 'POST'])
+@app.route('/api/startlearning', methods=['GET', 'POST'])
 def start_learning():
     if (session["id"]):
         session["start_time"] = datetime.datetime.now().isoformat()
@@ -93,7 +93,7 @@ def start_learning():
     return jsonify(False)
 
 
-@app.route('/endlearning', methods=['GET', 'POST'])
+@app.route('/api/endlearning', methods=['GET', 'POST'])
 def end_learning():
     # request_object = request.get_json()
     # print("start")

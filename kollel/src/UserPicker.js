@@ -44,7 +44,7 @@ export default class UserPicker extends Component{
         }
     }
     componentDidMount(){
-        fetch('/getuserlist', {
+        fetch('/api/getuserlist', {
             method: 'POST',
             headers: {
                 'Accept': 'application/json',
