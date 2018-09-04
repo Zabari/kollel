@@ -4,6 +4,7 @@ import json
 from dateutil.parser import parse
 from dateutil import relativedelta
 import math
+import pytz
 
 
 DAYS_OF_WEEK = [
@@ -100,7 +101,7 @@ def get_totals(user_id):
 
 def end_learning(user_id, start_time):
     connection = sqlite3.connect('hours.db')
-    end_time = datetime.datetime.now()
+    end_time = datetime.datetime.now(pytz.timezone("US/Eastern"))
     # print(end_time)
     start_time = parse(start_time)
     difference = relativedelta.relativedelta(end_time, start_time)

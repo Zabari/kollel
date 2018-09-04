@@ -5,6 +5,7 @@ import json
 import users
 import datetime
 import hours
+import pytz
 
 with open("secret.json") as f:
     secret_keys = json.load(f)
@@ -87,7 +88,8 @@ def get_user_list():
 @app.route('/api/startlearning', methods=['GET', 'POST'])
 def start_learning():
     if (session["id"]):
-        session["start_time"] = datetime.datetime.now().isoformat()
+        session["start_time"] = datetime.datetime.now(
+            tz=pytz.timezone("US/Eastern")).isoformat()
         hours.start_learning(session["id"], session["start_time"])
         return jsonify(True)
     return jsonify(False)
