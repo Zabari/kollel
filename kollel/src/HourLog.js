@@ -22,13 +22,24 @@ export default class HourLog extends Component{
         // }
         this.componentDidMount = this.componentDidMount.bind(this);
         this.fetchLog = this.fetchLog.bind(this);
+        this.componentWillReceiveProps = this.componentWillReceiveProps.bind(this);
     }
     componentDidMount(){
-        console.log(this.props);
         this.fetchLog(this.props.id);
     }
 
+    componentWillReceiveProps(props){
+        this.fetchLog(props.id);
+    }
+
     fetchLog(id){
+        let tempId = false;
+        if (id) {
+            tempId = id;
+        }
+        else {
+            tempId = this.props.id;
+        }
         fetch('/api/getlog', {
             method: 'POST',
             headers: {
@@ -37,12 +48,10 @@ export default class HourLog extends Component{
                 'Access-Control-Allow-Origin': 'http://localhost:3000'
             },
             credentials: "include",
-            body: JSON.stringify({"id": this.props.id}),
+            body: JSON.stringify({"id": tempId}),
         }).then((response) => {
             return response.json();
         }).then((response) => {
-            console.log(response);
-            // console.log(this.state.id);
             this.setState({
                 logList: response.logList,
                 totals: response.totals
