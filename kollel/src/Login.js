@@ -34,19 +34,21 @@ export default class Login extends Component {
 
     }
     render(){
+        // let x = GoogleLogin();
+        // console.log(x);
+        const googleButton = props =>(<GoogleLogin
+            clientId={process.env.REACT_APP_GOOGLE_KEY}
+            buttonText="Login"
+            onSuccess={this.success}
+            onFailure={responseGoogle}
+        {...props}/>);
         return (
             <Button
-                variant="outlined"
-                color="primary"
+                variant="contained"
                 className="Welcomebutton"
+                component={googleButton}
             >
-            <GoogleLogin
-                className="Welcomebutton"
-                clientId={process.env.REACT_APP_GOOGLE_KEY}
-                buttonText="Login"
-                onSuccess={this.success}
-                onFailure={responseGoogle}
-            />
+            Login
             </Button>
         );
     }
