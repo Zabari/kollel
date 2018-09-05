@@ -75,11 +75,11 @@ def is_survey_done(user_id):
         # print(user_id)
         survey = connection.execute(
             '''
-            SELECT hour_preference, chevruta_preference
+            SELECT hour_preference
             FROM users WHERE id = ?
             ''', (user_id,)).fetchone()
-        print(survey[0])
-        print(survey[0] is not None)
+        # print(survey[0])
+        # print(survey[0] is not None)
         return (survey[0] is not None)
         # if (plan):
         #     return plan[0]
@@ -93,8 +93,7 @@ def submit_survey(user_object):
         print(user_object)
         connection.execute(
             '''
-            UPDATE users SET hour_preference=:hours,
-                chevruta_preference=:chevruta
+            UPDATE users SET hour_preference=:hours
             WHERE id = :user_id
             ''', user_object)
         return True

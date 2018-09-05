@@ -35,7 +35,7 @@ export default class Survey extends Component {
 
     }
     handleSubmit(){
-        if ((this.state.chevrutaChoice) && (this.state.planChoice)){
+        if ((this.state.planChoice)){
             fetch('/api/submitsurvey', {
                 method: 'POST',
                 headers: {
@@ -118,32 +118,7 @@ export default class Survey extends Component {
                         I can’t commit to hours and would not like a chevruta.
                         </p>
 
-                    I would like to be paired with a chevruta:
-                    <p>
-                    <Radio value={JSON.stringify({index: 0, hours: 3})}
-                        checked={this.state.chevrutaList[0]}
-                        onChange={this.handleChevruta}/>
-                        Based on topic.
-                    </p>
-                    <p>
-                    <Radio value={JSON.stringify({index: 1, hours: 6})}
-                        checked={this.state.chevrutaList[1]}
-                        onChange={this.handleChevruta}/>
-                        Based on time.
-                    </p>
-                    <p>
-                    <Radio value={JSON.stringify({index: 2, hours: 10})}
-                        checked={this.state.chevrutaList[2]}
-                        onChange={this.handleChevruta}/>
-                        I’ll shoot you an email with my specific
-                        preferences.
-                    </p>
-                    <p>
-                    <Radio value={JSON.stringify({index: 3, hours: 0})}
-                        checked={this.state.chevrutaList[3]}
-                        onChange={this.handleChevruta}/>
-                        I would not like a chevruta.
-                    </p>
+
                     <Button onClick={this.handleSubmit} variant="contained">
                         Submit
                     </Button>
@@ -153,3 +128,30 @@ export default class Survey extends Component {
             );
     }
 }
+
+// I would like to be paired with a chevruta:
+// <p>
+// <Radio value={JSON.stringify({index: 0, hours: 3})}
+//     checked={this.state.chevrutaList[0]}
+//     onChange={this.handleChevruta}/>
+//     Based on topic.
+// </p>
+// <p>
+// <Radio value={JSON.stringify({index: 1, hours: 6})}
+//     checked={this.state.chevrutaList[1]}
+//     onChange={this.handleChevruta}/>
+//     Based on time.
+// </p>
+// <p>
+// <Radio value={JSON.stringify({index: 2, hours: 10})}
+//     checked={this.state.chevrutaList[2]}
+//     onChange={this.handleChevruta}/>
+//     I’ll shoot you an email with my specific
+//     preferences.
+// </p>
+// <p>
+// <Radio value={JSON.stringify({index: 3, hours: 0})}
+//     checked={this.state.chevrutaList[3]}
+//     onChange={this.handleChevruta}/>
+//     I would not like a chevruta.
+// </p>
