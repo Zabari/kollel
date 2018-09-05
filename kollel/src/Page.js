@@ -75,10 +75,16 @@ const LoginPage = () => (
     </div>
 )
 const About = () => (
+    <div>
     <h1>About</h1>
+    <h2>Coming Soon!</h2>
+    </div>
 )
 const Tanach = () => (
+    <div>
     <h1>929</h1>
+    <h2>Coming Soon!</h2>
+    </div>
 )
 class Page extends Component {
     constructor(props){

@@ -38,18 +38,27 @@ def login():
         if (admin):
             session["admin"] = admin
         session["id"] = user_id
-    return jsonify({"id": "id" in session, "admin": admin})
+        session["survey"] = users.is_survey_done(session["id"])
+    return jsonify({
+                        "id": "id" in session,
+                        "admin": admin,
+                        "survey": "survey" in session and session["survey"]
+                    })
 
 
-@app.route('/api/getid', methods=['GET', 'POST'])
+@app.route('/api/getcookies', methods=['GET', 'POST'])
 def get_id():
     cookie_object = {
         "id": False,
-        "admin": False
+        "admin": False,
+        "survey": False
     }
     # Looking for a True/False, not truthy/falsey.
     cookie_object["id"] = "id" in session
     cookie_object["admin"] = "admin" in session
+    cookie_object["survey"] = (
+        ("id" in session) and users.is_survey_done(session["id"]))
+    print("getting cookies")
     return jsonify(cookie_object)
     # return jsonify((("id" in session) and session["id"]) or 0)
 
@@ -107,3 +116,17 @@ def end_learning():
         # return jsonify(False)
     print("start_time" in session)
     return jsonify(False)
+
+
+@app.route('/api/submitsurvey', methods=['GET', 'POST'])
+def submit_survey():
+    request_object = dict(request.get_json())
+    request_object["user_id"] = session["id"]
+    users.submit_survey(request_object)
+
+    return jsonify(True)
+
+
+@app.route('/api/logout', methods=['GET', 'POST'])
+def logout():
+    session.clear()

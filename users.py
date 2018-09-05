@@ -10,6 +10,8 @@ def create_table(cursor):
             last_name TEXT DEFAULT NULL,
             email TEXT DEFAULT NULL,
             admin INTEGER DEFAULT NULL,
+            hour_preference TEXT DEFAULT NULL,
+            chevruta_preference TEXT DEFAULT NULL,
             id INTEGER PRIMARY KEY AUTOINCREMENT
         )
         '''
@@ -64,3 +66,38 @@ def add_user(user_object):
             '''
             SELECT id FROM users WHERE googleid=:sub
             ''', user_object).fetchone()[0]
+
+
+def is_survey_done(user_id):
+    connection = sqlite3.connect('users.db')
+    with connection:
+        create_table(connection)
+        # print(user_id)
+        survey = connection.execute(
+            '''
+            SELECT hour_preference, chevruta_preference
+            FROM users WHERE id = ?
+            ''', (user_id,)).fetchone()
+        print(survey[0])
+        print(survey[0] is not None)
+        return (survey[0] is not None)
+        # if (plan):
+        #     return plan[0]
+        return False
+
+
+def submit_survey(user_object):
+    connection = sqlite3.connect('users.db')
+    with connection:
+        create_table(connection)
+        print(user_object)
+        connection.execute(
+            '''
+            UPDATE users SET hour_preference=:hours,
+                chevruta_preference=:chevruta
+            WHERE id = :user_id
+            ''', user_object)
+        return True
+        # if (plan):
+        #     return plan[0]
+        return False
