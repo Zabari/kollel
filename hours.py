@@ -94,9 +94,25 @@ def get_totals(user_id):
             FROM learning_hours WHERE id=?
             ''',
             (user_id,)).fetchone()
-        total_hours = dict(total_hours)
-        total_hours["minutes"] += round(total_hours["seconds"]/60)
-        return total_hours
+        if total_hours["seconds"]:
+            total_hours = dict(total_hours)
+            total_hours["minutes"] += round(total_hours["seconds"]/60)
+            return total_hours
+        else:
+            return {"hours": 0, "minutes": 0}
+
+
+def is_learning(user_id):
+    connection = sqlite3.connect('hours.db')
+    with connection:
+        create_table(connection)
+        learning = connection.execute(
+            '''
+            SELECT start_time FROM learning_hours WHERE
+                id=? AND end_time is NULL
+            ''', (user_id,)
+        ).fetchone()
+        return learning[0] or False
 
 
 def end_learning(user_id, start_time):

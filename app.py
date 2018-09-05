@@ -83,7 +83,16 @@ def get_log():
 
 @app.route('/api/getlearningstate', methods=['GET', 'POST'])
 def get_learning():
+    if "start_time" in session:
+        return jsonify(True)
+    if "id" in session:
+        temp_hours = hours.is_learning(session["id"])
+        if temp_hours:
+            session["start_time"] = temp_hours
     return jsonify("start_time" in session)
+    # return jsonify(
+    #     ("start_time" in session) or hours.is_learning(session["id"])
+    # )
 
 
 @app.route('/api/getuserlist', methods=['GET', 'POST'])
