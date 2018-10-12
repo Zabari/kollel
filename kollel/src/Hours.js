@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import Button from '@material-ui/core/Button';
 import HourLog from './HourLog';
 
 export default class Hours extends Component{
@@ -76,14 +77,16 @@ export default class Hours extends Component{
     }
     renderTime(){
         let text = (<p> Start Learning!</p>);
+        let color = "primary";
         if (this.state.startTime){
             text = (<p> Finish Learning!</p>);
+            color = "secondary";
         }
         return(
             <div>
-            <button onClick={this.handleClick}>
+            <Button variant="contained" color={color} onClick={this.handleClick}>
                 {text}
-            </button>
+            </Button>
             <HourLog/>
             </div>
         );
