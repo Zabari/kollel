@@ -112,7 +112,7 @@ def is_learning(user_id):
                 id=? AND end_time is NULL
             ''', (user_id,)
         ).fetchone()
-        return learning[0] or False
+        return (learning and learning[0]) or False
 
 
 def end_learning(user_id, start_time):
