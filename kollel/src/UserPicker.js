@@ -2,7 +2,10 @@ import React, { Component } from 'react';
 import Select from '@material-ui/core/Select';
 import NativeSelect from '@material-ui/core/NativeSelect';
 import FormControl from '@material-ui/core/FormControl';
+import TextField from '@material-ui/core/TextField';
 import HourLog from './HourLog';
+import HourRequest from './HourRequest';
+
 
 export default class UserPicker extends Component{
     constructor(props){
@@ -20,10 +23,13 @@ export default class UserPicker extends Component{
         };
         this.componentDidMount = this.componentDidMount.bind(this);
         this.handleChange = this.handleChange.bind(this);
+        this.handleNewHours = this.handleNewHours.bind(this);
         this.renderCurrentHours = this.renderCurrentHours.bind(this);
 
     }
-
+    handleNewHours(event){
+        console.log(event.target.value);
+    }
     handleChange(event){
         // console.log(event.target.value)
         const obj = JSON.parse(event.target.value);
@@ -78,6 +84,21 @@ export default class UserPicker extends Component{
             </div>
         );
     }
+    renderRequestHours(){
+        // console.log(this.state.user);
+        if (this.state.user){
+            // console.log("woot");
+            return (
+                <div>
+                <HourRequest id={this.state.currentId}/>
+                </div>
+            );
+        }
+        return (
+            <div>
+            </div>
+        );
+    }
 
     render(){
         const options = this.state.userList.map((data)=>(
@@ -90,6 +111,8 @@ export default class UserPicker extends Component{
         const currentHours = this.renderCurrentHours();
         return(
             <div>
+                <p></p>
+                <h3>Choose a name to view hours:</h3>
 
           <Select
             native
@@ -102,6 +125,9 @@ export default class UserPicker extends Component{
           </Select>
           {this.state.currentEmail}
           {currentHours}
+          {this.renderRequestHours()}
+          <p>
+          </p>
             </div>
         );
     }

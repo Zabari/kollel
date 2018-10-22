@@ -9,27 +9,22 @@ export default class HourLog extends Component{
                 hours: 0,
                 minutes: 0,
             },
+            props: this.props,
         };
-        // console.log("construct");
-        // if ("name" in this.props){
-        //     console.log("name");
-        //     this.setState({
-        //         name: this.props.name,
-        //     });
-        // }
-        // if ("id" in this.props){
-        //     this.state.id = this.props.id;
-        // }
         this.componentDidMount = this.componentDidMount.bind(this);
         this.fetchLog = this.fetchLog.bind(this);
-        this.componentWillReceiveProps = this.componentWillReceiveProps.bind(this);
+        this.componentDidUpdate = this.componentDidUpdate.bind(this);
     }
     componentDidMount(){
         this.fetchLog(this.props.id);
     }
 
-    componentWillReceiveProps(props){
-        this.fetchLog(props.id);
+    componentDidUpdate(props){
+        if (props !== this.state.props){
+            this.fetchLog(props.id);
+            this.setState({props});
+
+        }
     }
 
     fetchLog(id){

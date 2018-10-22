@@ -32,6 +32,20 @@ def get_user_list():
         return False
 
 
+def get_name_by_id():
+    connection = sqlite3.connect('users.db')
+    # connection.row_factory = sqlite3.Row
+    with connection:
+        create_table(connection)
+        all_users = connection.execute(
+            '''
+            SELECT id, (first_name || " " || last_name) as name FROM users
+            ''').fetchall()
+        if (all_users):
+            return dict(all_users)
+        return False
+
+
 def exists(user_object):
     connection = sqlite3.connect('users.db')
     connection.row_factory = sqlite3.Row

@@ -43,6 +43,92 @@ def create_table(cursor):
     )
 
 
+def create_requested_table(cursor):
+    cursor.execute(
+        '''
+        CREATE TABLE IF NOT EXISTS requested_learning_hours (
+            start_time TEXT DEFAULT NULL,
+            end_time TEXT DEFAULT NULL,
+            seconds INTEGER DEFAULT NULL,
+            minutes INTEGER DEFAULT NULL,
+            hours INTEGER DEFAULT NULL,
+            "date" TEXT DEFAULT NULL,
+            day TEXT DEFAULT NULL,
+            partner TEXT DEFAULT NULL,
+            id INTEGER
+        )
+        '''
+    )
+
+
+def add_hours(user_id, start_time, end_time):
+    connection = sqlite3.connect('hours.db')
+    start_time = parse(start_time, tzinfos={pytz.timezone("US/Eastern")})
+    end_time = parse(end_time, tzinfos={pytz.timezone("US/Eastern")})
+    difference = relativedelta.relativedelta(end_time, start_time)
+    input_dict = {
+        "id": user_id,
+        "start_time": start_time.isoformat(),
+        "end_time": end_time.isoformat(),
+        "date": start_time.strftime("%Y-%m-%d"),
+        "day": DAYS_OF_WEEK[start_time.weekday()],
+        "hours": difference.hours,
+        "minutes": difference.minutes,
+        "seconds": difference.seconds,
+    }
+    with connection:
+        create_table(connection)
+        connection.execute(
+            '''
+            INSERT INTO learning_hours (
+                id, start_time,
+                "date", day,
+                end_time, hours,
+                minutes, seconds
+            )
+            VALUES (
+                :id, :start_time,
+                :date, :day,
+                :end_time, :hours,
+                :minutes, :seconds
+            )
+            ''', input_dict)
+
+
+def request_hours(user_id, start_time, end_time):
+    connection = sqlite3.connect('hours.db')
+    start_time = parse(start_time, tzinfos={pytz.timezone("US/Eastern")})
+    end_time = parse(end_time, tzinfos={pytz.timezone("US/Eastern")})
+    difference = relativedelta.relativedelta(end_time, start_time)
+    input_dict = {
+        "id": user_id,
+        "start_time": start_time.isoformat(),
+        "end_time": end_time.isoformat(),
+        "date": start_time.strftime("%Y-%m-%d"),
+        "day": DAYS_OF_WEEK[start_time.weekday()],
+        "hours": difference.hours,
+        "minutes": difference.minutes,
+        "seconds": difference.seconds,
+    }
+    with connection:
+        create_requested_table(connection)
+        connection.execute(
+            '''
+            INSERT INTO requested_learning_hours (
+                id, start_time,
+                "date", day,
+                end_time, hours,
+                minutes, seconds
+            )
+            VALUES (
+                :id, :start_time,
+                :date, :day,
+                :end_time, :hours,
+                :minutes, :seconds
+            )
+            ''', input_dict)
+
+
 def start_learning(user_id, start_time):
     connection = sqlite3.connect('hours.db')
     # start_time = datetime.datetime.now()
@@ -82,6 +168,30 @@ def get_log(user_id):
         return hour_log
 
 
+def get_request_log(user_id=False):
+    connection = sqlite3.connect('hours.db')
+    connection.row_factory = sqlite3.Row
+    with connection:
+        create_requested_table(connection)
+        if (user_id):
+            hour_log = connection.execute(
+                '''
+                SELECT id, start_time, end_time, "date", day,
+                hours, minutes, rowid FROM requested_learning_hours
+                WHERE id=? ORDER BY start_time DESC
+                ''',
+                (user_id,)).fetchall()
+        else:
+            hour_log = connection.execute(
+                '''
+                SELECT id, start_time, end_time, "date", day,
+                hours, minutes, rowid FROM requested_learning_hours
+                ORDER BY start_time DESC
+                ''',
+                ).fetchall()
+        return hour_log
+
+
 def get_totals(user_id):
     connection = sqlite3.connect('hours.db')
     connection.row_factory = sqlite3.Row
@@ -100,6 +210,43 @@ def get_totals(user_id):
             return total_hours
         else:
             return {"hours": 0, "minutes": 0}
+
+
+def approve_request(rowid):
+    connection = sqlite3.connect('hours.db')
+    with connection:
+        create_requested_table(connection)
+        create_table(connection)
+        connection.execute(
+            '''
+            INSERT INTO learning_hours SELECT * FROM
+                requested_learning_hours WHERE ROWID = ?;
+            ''',
+            (rowid,))
+        connection.execute(
+            '''
+                DELETE FROM requested_learning_hours WHERE ROWID = ?;
+            ''',
+            (rowid,))
+
+
+def reject_request(rowid, user_id=False):
+    connection = sqlite3.connect('hours.db')
+    with connection:
+        create_requested_table(connection)
+        create_table(connection)
+        if (user_id):
+            connection.execute(
+                '''
+                DELETE FROM requested_learning_hours WHERE
+                    ROWID=? AND id=?;
+                ''',
+                (rowid, user_id,))
+        connection.execute(
+            '''
+            DELETE FROM requested_learning_hours WHERE ROWID = ?;
+            ''',
+            (rowid,))
 
 
 def is_learning(user_id):

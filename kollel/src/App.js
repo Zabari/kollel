@@ -6,6 +6,11 @@ import Login from './Login';
 import Hours from './Hours';
 import UserPicker from './UserPicker';
 import Survey from './Survey';
+import Logout from './Logout';
+import RequestButton from './RequestButton';
+
+
+
 
 const responseGoogle = (response) => {
   console.log(response);
@@ -62,7 +67,9 @@ export default class App extends Component {
     renderAdmin(){
         return (
             <div>
-                {this.renderHours()}
+                <Hours id={this.state.id} />
+                <Logout/>
+                <RequestButton admin={true}/>
                 <UserPicker/>
             </div>
         );
@@ -71,6 +78,8 @@ export default class App extends Component {
         return (
             <div>
                 <Hours id={this.state.id} />
+                <Logout/>
+                <RequestButton/>
             </div>
         );
     }

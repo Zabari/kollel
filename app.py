@@ -81,6 +81,27 @@ def get_log():
     return jsonify(False)
 
 
+@app.route('/api/getrequestlog', methods=['GET', 'POST'])
+def get_request_log():
+    # print(request.get_json())
+    # request_object = request.get_json()
+    hour_log = None
+    if (
+        ("admin" in session) and
+        session["admin"]
+    ):
+        hour_log = [dict(log) for log in hours.get_request_log()]
+        all_users = users.get_name_by_id()
+        for log in hour_log:
+            log["name"] = all_users[log["id"]]
+            del log["id"]
+    else:
+        hour_log = [dict(log) for log in hours.get_request_log(session["id"])]
+    if (hour_log is not None):
+        return jsonify({"logList": hour_log})
+    return jsonify(False)
+
+
 @app.route('/api/getlearningstate', methods=['GET', 'POST'])
 def get_learning():
     if "start_time" in session:
@@ -115,15 +136,9 @@ def start_learning():
 
 @app.route('/api/endlearning', methods=['GET', 'POST'])
 def end_learning():
-    # request_object = request.get_json()
-    # print("start")
     if ("start_time" in session):
-        # print("in here")
         hours.end_learning(session["id"], session["start_time"])
-        # temp = session["start_time"]
         session.pop("start_time")
-        # return jsonify(False)
-    print("start_time" in session)
     return jsonify(False)
 
 
@@ -132,10 +147,53 @@ def submit_survey():
     request_object = dict(request.get_json())
     request_object["user_id"] = session["id"]
     users.submit_survey(request_object)
-
     return jsonify(True)
+
+
+@app.route('/api/approverequest', methods=['GET', 'POST'])
+def approve_request():
+    if ("admin" in session):
+        request_object = dict(request.get_json())
+        hours.approve_request(request_object["rowid"])
+    return jsonify(False)
+
+
+@app.route('/api/rejectrequest', methods=['GET', 'POST'])
+def reject_request():
+    request_object = dict(request.get_json())
+    if ("admin" in session):
+        hours.reject_request(request_object["rowid"])
+    else:
+        hours.reject_request(request_object["rowid"], session["id"])
+    return jsonify(False)
 
 
 @app.route('/api/logout', methods=['GET', 'POST'])
 def logout():
     session.clear()
+    return jsonify(False)
+
+
+@app.route('/api/requesthours', methods=['GET', 'POST'])
+def request_hours():
+    request_object = dict(request.get_json())
+    if (
+        ("admin" in session) and
+        (request_object["start_time"] < request_object["end_time"])
+    ):
+        hours.add_hours(
+            ("id" in request_object and request_object["id"]) or session["id"],
+            request_object["start_time"],
+            request_object["end_time"]
+        )
+        return jsonify(True)
+    elif (request_object["start_time"] < request_object["end_time"]):
+        hours.request_hours(
+            session["id"],
+            request_object["start_time"],
+            request_object["end_time"]
+        )
+        return jsonify(True)
+    # request_object["user_id"] = session["id"]
+    # users.submit_survey(request_object)
+    return jsonify(True)
